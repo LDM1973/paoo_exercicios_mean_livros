@@ -14,6 +14,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CabecalhoComponent } from './cabecalho/cabecalho.component';
 import { LivrosListaComponent } from './livros-lista/livros-lista.component';
 
+import { LivroService } from './livros/livro.service';
+
 @NgModule({
   declarations: [AppComponent, LivrosInserirComponent, CabecalhoComponent, LivrosListaComponent],
   imports: [BrowserModule,
@@ -25,7 +27,7 @@ import { LivrosListaComponent } from './livros-lista/livros-lista.component';
     MatToolbarModule,
     MatExpansionModule,
   ],
-  providers: [],
+  providers: [LivroService],
   bootstrap: [AppComponent],
   })
 export class AppModule {}
