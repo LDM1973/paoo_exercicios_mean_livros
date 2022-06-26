@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule} from '@angular/common/http'
 
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +16,7 @@ import { CabecalhoComponent } from './cabecalho/cabecalho.component';
 import { LivrosListaComponent } from './livros-lista/livros-lista.component';
 
 import { LivroService } from './livros/livro.service';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [AppComponent, LivrosInserirComponent, CabecalhoComponent, LivrosListaComponent],
@@ -26,6 +28,8 @@ import { LivroService } from './livros/livro.service';
     MatButtonModule,
     MatToolbarModule,
     MatExpansionModule,
+    HttpClientModule,
+    AppRoutingModule,
   ],
   providers: [LivroService],
   bootstrap: [AppComponent],

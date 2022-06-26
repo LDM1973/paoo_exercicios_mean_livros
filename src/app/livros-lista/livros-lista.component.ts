@@ -13,13 +13,24 @@ export class LivrosListaComponent implements OnInit, OnDestroy {
 
   livros: Livro[] = [];
   private livrosSubscription!: Subscription;
+  httpClient: any;
 
   constructor(private livroService: LivroService) {
 
   }
 
+  removerLivro(id: string): void{
+    this.httpClient.delete(`http://localhost:3000/api/livros/${id}`).subscribe(() => {
+    console.log (`Livro de id: ${id} removido`);
+    });
+  }
+
+  onDelete (id: string): void{
+    this.livroService.removerLivro(id);
+  }
+
   ngOnInit() : void {
-    this.livros = this.livroService.getLivros();
+    this.livroService.getLivros();
     this.livrosSubscription = this.livroService
       .getListaDeLivrosAtualizadaObservable()
       .subscribe((livros: Livro[]) => {
