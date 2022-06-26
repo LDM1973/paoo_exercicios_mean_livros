@@ -15,24 +15,10 @@ export class LivroService {
   constructor (private httpClient: HttpClient){
   }
 
-  getLivros(): void {
-    this.httpClient.get <{mensagem: string, livros: any}>('http://localhost:3000/api/livros')
-    .pipe(map((dados) => {
-      return dados.livros.map((livro: { _id: any; titulo: any; autor: any; numeroPaginas: any; }) => {
-        return {
-        id: livro._id,
-        titulo: livro.titulo,
-        autor: livro.autor,
-        numeroPaginas: livro.numeroPaginas
-        }
-      })
-    }))
-    .subscribe(
-    (livros) => {
-      this.livros = livros;
-      this.listaLivrosAtualizada.next([...this.livros]);
-      }
-    )
+  getLivros (idLivro: string){
+    //return {...this.clientes.find((cli) => cli.id === idCliente)};
+    return this.httpClient.get<{_id: string, titulo: string, autor: string, numeroPaginas:
+    string}>(`http://localhost:3000/api/livros/${idLivro}`);
   }
 
   adicionarLivro(id: string, titulo: string, autor: string, numeroPaginas: string) {
@@ -52,14 +38,30 @@ export class LivroService {
   )
 }
 
-removerlivro (id: string): void{
-  this.httpClient.delete(`http://localhost:3000/api/livros/${id}`).subscribe(() => {
-  this.livros = this.livros.filter((cli) => {
-  return cli.id !== id
-  });
-  this.listaLivrosAtualizada.next([...this.livros]);
-  });
-}
+  atualizarLivro (id: string, titulo: string, autor: string, numeroPaginas: string){
+    const livro: livro = { id, titulo, autor, numeroPaginas};
+    this.httpClient.put(`http://localhost:3000/api/livros/${id}`, livro)
+    .subscribe((res => {
+      const copia = [...this.livros];
+      const indice = copia.findIndex (cli => cli.id === livro.id);
+      copia[indice] = livro;
+      this.livros = copia;
+      this.listaLivrosAtualizada.next([...this.livros]);
+    }));
+  }
+
+  removerlivro (id: string): void{
+    this.httpClient.delete(`http://localhost:3000/api/livros/${id}`).subscribe(() => {
+    this.livros = this.livros.filter((cli) => {
+    return cli.id !== id
+    });
+    this.listaLivrosAtualizada.next([...this.livros]);
+    });
+  }
+
+getLivro (idLivro: string){
+  return {...this.livros.find((cli) => cli.id === idLivro)};
+  }
 
   getListaDeLivrosAtualizadaObservable() {
     return this.listaLivrosAtualizada.asObservable();

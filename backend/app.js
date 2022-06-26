@@ -32,18 +32,18 @@ const livros = [
 app.use ((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', "*");
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
   next();
 });
 
 app.get('/api/livros', (req, res, next) => {
-  Livro.find().then(documents => {
-  console.log (documents)
-  res.status(200).json({
-    mensagem: "Tudo OK",
-    livros: documents
-    });
+  Livro.findById(req.params.id).then(cli => {
+    if (cli){
+      res.status(200).json(cli);
+    }
+    else
+    res.status(404).json({mensagem: "Livro não encontrado!"})
   })
 });
 
@@ -75,6 +75,20 @@ app.delete ('/api/livros/:id', (req, res, next) => {
     console.log (resultado);
     res.status(200).json({mensagem: "Livro removido"})
     });
+});
+
+app.put ("/api/livros/:id", (req, res, next) => {
+  const livro = new Livro({
+    _id: req.params.id,
+    titulo: req.body.titulo,
+    autor: req.body.autor,
+    numeroPaginas: req.body.numeroPaginas
+  });
+  Livro.updateOne({_id: req.params.id}, livro)
+  .then ((resultado) => {
+    console.log (resultado)
+  });
+  res.status(200).json({mensagem: 'Atualização realizada com sucesso'})
 });
 
 module.exports = app;
